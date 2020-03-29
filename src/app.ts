@@ -1,9 +1,10 @@
 import express from 'express';
 
-import db from './db';
+import routes from './routes';
 
 const app = express();
 
-/* [TODO] Код вашего приложения */
+app.use(express.json());
+routes(app);
 
 export default app;
