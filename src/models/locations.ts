@@ -58,6 +58,28 @@ class Locations extends ExtendedModel {
       }
     );
   }
+
+  static getAllSortedBy(sortedOption: string, reversed = false): Promise<Locations[]> {
+    return Locations.findAll({
+      where: {
+        deleted: false
+      },
+      order: [[sortedOption, reversed ? 'DESC' : 'ASC']]
+    });
+  }
+
+  static swapElements(
+    firstId: number,
+    secondId: number
+  ): Promise<[unknown[], unknown]> | undefined {
+    return Locations.sequelize?.query(`
+        update locations
+            set name = case id
+                when ${firstId} then (select name from locations where id = ${secondId})
+                when ${secondId} then (select name from locations where id = ${firstId})
+            end
+        where id in (${firstId},${secondId});`);
+  }
 }
 
 export default Locations;

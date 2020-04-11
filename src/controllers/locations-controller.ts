@@ -20,6 +20,26 @@ const locationsController = {
       res.send(locations);
     });
   },
+  listSortedByDatesAsc: (req: Request, res: Response) => {
+    Locations.getAllSortedBy('created').then(locations => {
+      res.send(locations);
+    });
+  },
+  listSortedByDatesDesc: (req: Request, res: Response) => {
+    Locations.getAllSortedBy('created', true).then(locations => {
+      res.send(locations);
+    });
+  },
+  listSortedByNamesAsc: (req: Request, res: Response) => {
+    Locations.getAllSortedBy('name').then(locations => {
+      res.send(locations);
+    });
+  },
+  listSortedByNamesDesc: (req: Request, res: Response) => {
+    Locations.getAllSortedBy('name', true).then(locations => {
+      res.send(locations);
+    });
+  },
 
   listFilteredByDescription: (req: Request, res: Response) => {
     Locations.findAll({
@@ -147,6 +167,18 @@ const locationsController = {
     },
     (req, res) => {
       Locations.changeVisited(getNumber('id', req), false).then(() => {
+        res.sendStatus(204);
+      });
+    }
+  ),
+
+  swap: $(
+    req => {
+      new LocationsValidator().run('id', req);
+      new LocationsValidator().run('swapId', req);
+    },
+    (req, res) => {
+      Locations.swapElements(getNumber('id', req), getNumber('swapId', req))?.then(() => {
         res.sendStatus(204);
       });
     }

@@ -9,6 +9,11 @@ const routes = (app: Express): void => {
     .get(locationsController.list)
     .delete(locationsController.deleteList);
 
+  app.route('/locations/sortedByDates').get(locationsController.listSortedByDatesAsc);
+  app.route('/locations/sortedByDates/reversed').get(locationsController.listSortedByDatesDesc);
+  app.route('/locations/sortedByNames').get(locationsController.listSortedByNamesAsc);
+  app.route('/locations/sortedByNames/reversed').get(locationsController.listSortedByNamesDesc);
+
   app.route('/locations/page/:pageIndex([0-9]+)').get(locationsController.page);
 
   app
@@ -21,6 +26,8 @@ const routes = (app: Express): void => {
   app.route('/locations/:id([0-9]+)/unvisit').patch(locationsController.unvisit);
 
   app.route('/locations/:id([0-9]+)/description').patch(locationsController.changeDescription);
+
+  app.route('/locations/:id([0-9]+)/swap/:swapId([0-9]+)').put(locationsController.swap);
 
   app.route('/locations/search').get(locationsController.listFilteredByDescription);
 
